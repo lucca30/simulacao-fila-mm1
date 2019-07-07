@@ -91,15 +91,6 @@ def termina_servico(tempo, globais, auxiliar, dados):
         novos_eventos.append( (tempo + gerar_variavel_exp(globais["mi"]), termina_servico, nova_pessoa ) )
     return novos_eventos
 
-count_w = 0
-soma_w = 0
-def coleta_estatistica(tipo ,dados, globais):
-    global soma_w, count_w
-    if(tipo == "W"):
-        soma_w += dados
-        count_w += 1
-        if(count_w % 100000 == 0):
-            print(soma_w/count_w, ((globais["lamb"])/(globais["mi"]**2))/(1-(globais["lamb"]/globais["mi"])) )
 
 
 def funcao_inicio(globais, auxiliar, lista_eventos):
@@ -119,6 +110,23 @@ g = {
     "lamb" : 0.8,
     "N" : 0
 }
+
+
+count_w = 0
+soma_w = 0
+amostra_w = []
+k = 100000
+def coleta_estatistica(tipo ,dados, globais):
+    global soma_w, count_w
+    if(tipo == "W"):
+        soma_w += dados
+        count_w += 1
+        if(len(amostra_w) == k ):
+            soma_w -= amostra_w.pop(0)
+        amostra_w.append(dados)
+        if(count_w % k == 0):
+            print(soma_w/len(amostra_w), ((globais["lamb"])/(globais["mi"]**2))/(1-(globais["lamb"]/globais["mi"])) )
+
 
 e = Eventos(g)
 
